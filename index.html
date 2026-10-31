@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Lucky is an experimental Windows 2D/3D scene editor and launcher built on Godot, with an integrated AI workspace.">
+  <title>Lucky Engine — Make a little world.</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <p class="eyebrow">A WINDOWS SCENE EDITOR · GODOT 4.7.2</p>
+        <p class="ascii" aria-label="Lucky Engine ASCII wordmark">
+ _          _      _        
+| |        | |    | |       
+| |    _   | | __ | | __   _ 
+| |   | |  | |/ / | |/ /  | |
+| |___| |__|   &lt;  |   &lt;   | |
+\_____/\____/_|\_\ |_|\_\  |_|
+        </p>
+        <h1>Make a little world.</h1>
+        <p class="hero-copy">A focused space to shape 2D and 3D scenes, bring projects to life, and keep an AI workspace close at hand.</p>
+        <a class="download-button" id="download-button" href="https://github.com/colmlenehan-gh/Lucky-Engine/releases/latest" target="_blank" rel="noopener">
+          <span>Download Lucky</span><span class="button-arrow" aria-hidden="true">↗</span>
+        </a>
+        <p class="micro-note">Windows 10 / 11 · 64-bit · Experimental beta</p>
+      </div>
+      <div class="hero-bottom"><span>SCROLL TO EXPLORE</span><span class="scroll-line"></span><span>01 / 05</span></div>
+    </section>
+
+    <section class="intro section-pad">
+      <div class="section-index">01 — THE IDEA</div>
+      <div class="intro-grid">
+        <h2>One place for<br><span>the whole scene.</span></h2>
+        <div>
+          <p class="lead">Lucky is an experimental Windows scene editor and launcher built on Godot, with an integrated AI workspace.</p>
+          <p>Start with a blank canvas or an example. Arrange objects, tune transforms, import assets, write scripts, then run your project — all from a deliberately monochrome workspace.</p>
+        </div>
+      </div>
+      <div class="screen-frame large">
+        <img src="images/launcher.png" alt="Lucky launcher screenshot" onerror="this.style.display='none'">
+        <div class="placeholder-copy"><span>SCREENSHOT 01</span><strong>Launcher / project library</strong><small>Place <code>launcher.png</code> in <code>images/</code></small></div>
+      </div>
+    </section>
+
+    <section class="features section-pad">
+      <div class="section-index">02 — THE WORKSPACE</div>
+      <div class="section-heading"><h2>Small tools.<br><span>Room to build.</span></h2><p>Core workflows for making and testing a scene, without pretending to be a complete replacement for every editor subsystem.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card"><span class="feature-no">01 / CREATE</span><h3>Start anywhere</h3><p>Choose Blank, Showcase, or a playable 2D Platformer template. Projects are created in their own dedicated folders.</p></article>
+        <article class="feature-card"><span class="feature-no">02 / SHAPE</span><h3>2D + 3D scenes</h3><p>Work with 2D sprites, shapes and labels, or 3D primitives. Move, rotate, scale, filter, duplicate and reorder objects.</p></article>
+        <article class="feature-card"><span class="feature-no">03 / ITERATE</span><h3>Save, run, repeat</h3><p>Save a portable Lucky manifest, use snapshots, edit GDScript, and run or stop projects with the included runtime.</p></article>
+        <article class="feature-card"><span class="feature-no">04 / ASSIST</span><h3>AI, in the flow</h3><p>Connect an optional Codex app-server or compatible executable for streamed chat, supported attachments and MCP discovery.</p></article>
+      </div>
+      <div class="screen-pair">
+        <figure class="screen-frame">
+          <img src="images/editor-2d.png" alt="Lucky 2D editor screenshot" onerror="this.style.display='none'">
+          <div class="placeholder-copy"><span>SCREENSHOT 02</span><strong>2D scene editor</strong><small>images/editor-2d.png</small></div>
+        </figure>
+        <figure class="screen-frame">
+          <img src="images/editor-3d.png" alt="Lucky 3D editor screenshot" onerror="this.style.display='none'">
+          <div class="placeholder-copy"><span>SCREENSHOT 03</span><strong>3D scene editor</strong><small>images/editor-3d.png</small></div>
+        </figure>
+      </div>
+      <figure class="screen-frame wide">
+        <img src="images/ai-workspace.png" alt="Lucky AI workspace screenshot" onerror="this.style.display='none'">
+        <div class="placeholder-copy"><span>SCREENSHOT 04</span><strong>Integrated AI workspace</strong><small>images/ai-workspace.png</small></div>
+      </figure>
+    </section>
+
+    <section class="details section-pad">
+      <div class="section-index">03 — GETTING STARTED</div>
+      <div class="details-grid">
+        <div><h2>From download<br>to <span>first scene.</span></h2><p class="muted">The Windows installer includes the game-engine runtime. The optional AI connector is a separate, larger component.</p></div>
+        <ol class="steps">
+          <li><span>01</span><div><strong>Get the latest release</strong><p>Download the Windows x64 installer from GitHub Releases.</p></div></li>
+          <li><span>02</span><div><strong>Create a project</strong><p>Choose a template and a parent folder. Lucky creates a dedicated project directory.</p></div></li>
+          <li><span>03</span><div><strong>Build your scene</strong><p>Use Add, Inspector and Save to shape the scene, then press Run to launch it.</p></div></li>
+        </ol>
+      </div>
+      <div class="notice"><strong>Beta note</strong><p>Lucky is experimental. General import of existing Godot projects, advanced editor systems, automatic AI project-file changes, and cross-platform native exports are not implemented in this beta. The installer is currently unsigned.</p></div>
+    </section>
+
+    <section class="specs section-pad">
+      <div class="section-index">04 — AT A GLANCE</div>
+      <h2>Know before<br><span>you install.</span></h2>
+      <div class="spec-list">
+        <div><span>PLATFORM</span><strong>Windows 10 / 11 · x64</strong></div>
+        <div><span>ENGINE BASE</span><strong>Godot 4.7.2</strong></div>
+        <div><span>GRAPHICS</span><strong>OpenGL 3.3 support</strong></div>
+        <div><span>PROJECT FORMAT</span><strong>Lucky JSON manifest</strong></div>
+        <div><span>AI CONNECTOR</span><strong>Optional · internet required</strong></div>
+        <div><span>LICENSE</span><strong>MIT (Lucky code)</strong></div>
+      </div>
+      <p class="fine-print">The shipped Godot runtime, optional Codex connector and their dependencies retain their own upstream licenses and notices. See the third-party references below.</p>
+    </section>
+
+    <section class="links-section section-pad">
+      <div class="section-index">05 — OPEN SOURCE</div>
+      <div class="links-head"><h2>Follow the<br><span>source.</span></h2><p>Read the project notes, inspect the code, and check the release page for current builds and checksums.</p></div>
+      <div class="resource-links">
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine" target="_blank" rel="noopener"><span>GitHub repository</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/releases/latest" target="_blank" rel="noopener"><span>Latest release & downloads</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/README.md" target="_blank" rel="noopener"><span>README & installation guide</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/FEATURES.md" target="_blank" rel="noopener"><span>Feature scope & limitations</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/BUILD.md" target="_blank" rel="noopener"><span>Build instructions</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/CHANGELOG.md" target="_blank" rel="noopener"><span>Changelog</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/THIRD-PARTY.md" target="_blank" rel="noopener"><span>Third-party software & references</span><b>↗</b></a>
+        <a href="https://github.com/colmlenehan-gh/Lucky-Engine/blob/main/LICENSE" target="_blank" rel="noopener"><span>MIT license</span><b>↗</b></a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <pre aria-label="ASCII art">  .--------------------------.
+  |  MAKE. TEST. PLAY.        |
+  '--------------------------'</pre>
+      <p>LUCKY ENGINE <span>·</span> AN EXPERIMENTAL WINDOWS TOOL</p>
+      <a href="#top">BACK TO TOP ↑</a>
+      <small>Lucky code © 2026 Lucky contributors. MIT licensed.</small>
+    </footer>
+  </main>
+</body>
+</html>
