@@ -3,6 +3,7 @@ param([switch]$SkipConnector)
 # Run from the extracted Lucky source bundle. All paths are relative to this file.
 # This build performs headless imports only; it never opens Lucky or its installer.
 $ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -38,6 +39,7 @@ function Reset-BuildDirectory([string]$Folder) {
 }
 
 function Get-PinnedDownload([string]$Url,[string]$FileName,[string]$Algorithm,[string]$ExpectedHash) {
+    Write-Host ('Preparing verified dependency: ' + $FileName)
     $cached = Join-Path $cacheRoot $FileName
     if (Test-Path -LiteralPath $cached) {
         $actual = (Get-FileHash -LiteralPath $cached -Algorithm $Algorithm).Hash
@@ -67,6 +69,7 @@ function Invoke-HeadlessGodot([string[]]$Arguments) {
 
 $godotZip = Get-PinnedDownload 'https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip' 'Godot-4.7.2-win64.zip' 'SHA512' '83decd58fdf67b9d657958a1ae6bf1929c20785315a81effe245874cdc57acb709bf868e00778a96984338c1b29dafdb453c6847747694621c6ecf5da2259993'
 $godotExtract = Join-Path $buildRoot 'godot'
+Write-Output 'Extracting the verified Godot runtime.'
 Expand-Archive -LiteralPath $godotZip -DestinationPath $godotExtract
 $godot = Join-Path $godotExtract 'Godot_v4.7.2-stable_win64.exe'
 $script:godotConsole = Join-Path $godotExtract 'Godot_v4.7.2-stable_win64_console.exe'
@@ -93,6 +96,7 @@ Get-Notice 'https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/LICENSE
 Get-Notice 'https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/NOTICE' 'CODEX-NOTICE.txt'
 
 if (-not $SkipConnector) {
+    Write-Output 'Preparing the optional account connector.'
     $connectorArchive = Get-PinnedDownload 'https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-app-server-package-x86_64-pc-windows-msvc.tar.gz' 'codex-app-server-0.166.0-win64.tar.gz' 'SHA256' '2476ec968c64e9ae47f449446320e47a54d16f5436ce6eb95eec758584f12eb6'
     $tarCommand = Get-Command tar.exe -ErrorAction SilentlyContinue
     if (-not $tarCommand) { throw 'Windows tar.exe is required to unpack the optional account connector. Install it or build with -SkipConnector.' }
@@ -117,6 +121,7 @@ try {
     $env:APPDATA = $profile
     $env:LOCALAPPDATA = $profile
     $env:LUCKY_EXAMPLES_DIR = Join-Path $payloadRoot 'examples'
+    Write-Output 'Importing editor resources headlessly.'
     Invoke-HeadlessGodot -Arguments @('--headless','--path',$editorRoot,'--editor','--import','--quit')
     $exampleScript = Join-Path $buildRoot 'create_examples.gd'
     @'
@@ -134,6 +139,7 @@ func _initialize() -> void:
     quit(0)
 '@ | Set-Content -LiteralPath $exampleScript -Encoding UTF8
     Invoke-HeadlessGodot -Arguments @('--headless','--path',$editorRoot,'--script',$exampleScript)
+    Write-Output 'Example projects generated.'
 }
 finally {
     $env:APPDATA = $previousAppData
@@ -160,11 +166,13 @@ foreach ($folder in @('docs','export_templates','feature_profiles','script_templ
 }
 
 $packaging = Join-Path $sourceRoot 'packaging/build.ps1'
+Write-Output 'Compiling the Windows launcher and uninstaller.'
 & $packaging -PayloadDirectory $payloadRoot -OutputDirectory $distRoot -StageOnly
 if ($LASTEXITCODE -ne 0) { throw 'Native launcher build failed.' }
 $payloadZip = Join-Path $workRoot 'LuckyPayload.zip'
 if (Test-Path -LiteralPath $payloadZip) { Remove-Item -LiteralPath (Assert-WorkspacePath $payloadZip) -Force }
 [IO.Compression.ZipFile]::CreateFromDirectory($payloadRoot,$payloadZip,[IO.Compression.CompressionLevel]::Optimal,$false)
+Write-Output 'Payload compressed; compiling the self-contained installer.'
 & $packaging -PayloadZip $payloadZip -OutputDirectory $distRoot
 if ($LASTEXITCODE -ne 0) { throw 'Native installer build failed.' }
 $installer = Join-Path $distRoot 'Lucky-Setup-0.1.0-beta-windows-x64.exe'

@@ -48,6 +48,9 @@ jobs:
           $checkedOut = (& git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $checkedOut -cne $env:GITHUB_SHA) { throw 'Checked-out commit does not match this run.' }
 
+      - name: Test release publishing logic without network access
+        run: .\.github\tests\publish-release-tests.ps1
+
       - name: Build the pinned Windows package
         run: .\build-release.ps1
 

@@ -37,7 +37,13 @@ else {
 # Retries may replace assets only while this same-commit release remains a draft.
 $uploadArguments = @('release','upload',$env:RELEASE_TAG,'--repo',$env:GH_REPO,'--clobber') + @($assets.FullName)
 $null = Invoke-Gh $uploadArguments
-$result = Invoke-Gh @('api',('repos/' + $env:GH_REPO + '/releases/tags/' + $env:RELEASE_TAG))
+$result = Invoke-Gh @('api',('repos/' + $env:GH_REPO + '/releases?per_page=100'))
+$listedReleases = $result.Text | ConvertFrom-Json
+$candidates = @($listedReleases | Where-Object { $_.tag_name -ceq $env:RELEASE_TAG })
+if ($candidates.Count -ne 1 -or -not $candidates[0].draft -or $candidates[0].id -notmatch '^\d+$') { throw 'Could not identify the unique draft release; release remains unpublished.' }
+# Draft releases may not have a Git tag yet, so the by-tag API can return 404.
+$releaseId = [string]$candidates[0].id
+$result = Invoke-Gh @('api',('repos/' + $env:GH_REPO + '/releases/' + $releaseId))
 $uploaded = $result.Text | ConvertFrom-Json
 if (-not $uploaded.draft -or @($uploaded.assets).Count -ne $expected.Count -or @(Compare-Object $expected @($uploaded.assets.name)).Count -ne 0) { throw 'Draft asset verification failed; release remains unpublished.' }
 foreach ($file in $assets) {
