@@ -1,0 +1,22 @@
+{
+  "product": "Lucky",
+  "version": "0.1.0-beta",
+  "architecture": "windows-x86_64",
+  "editor": "Custom Godot project; upstream runtime unmodified",
+  "components": [
+    {
+      "checksum": "83decd58fdf67b9d657958a1ae6bf1929c20785315a81effe245874cdc57acb709bf868e00778a96984338c1b29dafdb453c6847747694621c6ecf5da2259993",
+      "name": "Godot",
+      "url": "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip",
+      "version": "4.7.2-stable",
+      "checksumAlgorithm": "SHA512"
+    },
+    {
+      "checksum": "2476ec968c64e9ae47f449446320e47a54d16f5436ce6eb95eec758584f12eb6",
+      "name": "Codex app-server optional",
+      "url": "https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-app-server-package-x86_64-pc-windows-msvc.tar.gz",
+      "version": "0.166.0",
+      "checksumAlgorithm": "SHA256"
+    }
+  ]
+}

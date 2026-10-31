@@ -1,0 +1,24 @@
+# Godot's generated editor/import caches. Keep source .uid files tracked.
+.godot/
+*.tmp
+*.log
+
+# Reproducible build downloads, payloads and installers belong in Releases.
+/work/
+/dist/
+*.exe
+*.dll
+*.pdb
+*.zip
+*.tar.gz
+*.tar.xz
+*.download
+
+# Machine/user settings.
+.DS_Store
+Thumbs.db
+Desktop.ini
+.env
+.env.*
+!.env.example
+

@@ -1,0 +1,77 @@
+name: Build and publish Lucky beta
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Beta release tag
+        required: true
+        type: choice
+        default: v0.1.0-beta
+        options:
+          - v0.1.0-beta
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lucky-v0.1.0-beta-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: powershell
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Check out the dispatched commit
+        # Official actions/checkout v7.0.1; verified against its release tag.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate release context
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:RELEASE_TAG -cne 'v0.1.0-beta') { throw 'Unsupported release tag.' }
+          if ($env:GITHUB_REF -cne 'refs/heads/main') { throw 'Release must be dispatched from main.' }
+          $checkedOut = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $checkedOut -cne $env:GITHUB_SHA) { throw 'Checked-out commit does not match this run.' }
+
+      - name: Build the pinned Windows package
+        run: .\build-release.ps1
+
+      - name: Run headless tests and verify the installer payload
+        run: .\.github\scripts\verify-release.ps1
+
+      - name: Assemble all release assets and checksums
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $distRoot = Join-Path $env:GITHUB_WORKSPACE 'dist'
+          $sourceZip = Join-Path $distRoot 'Lucky-Source-0.1.0-beta.zip'
+          & git archive --format=zip ('--output=' + $sourceZip) $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw 'Source archive creation failed.' }
+          $documents = @('AI.md','BUILD.md','CHANGELOG.md','FEATURES.md','LICENSE.txt','README.md','SOURCE-MANIFEST.json','TEST-RESULTS.md','THIRD-PARTY.md')
+          foreach ($name in $documents) {
+            Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $name) -Destination (Join-Path $distRoot $name)
+          }
+          $checksums = foreach ($file in Get-ChildItem -LiteralPath $distRoot -File | Where-Object { $_.Name -ne 'SHA256SUMS.txt' } | Sort-Object Name) {
+            (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $file.Name
+          }
+          $checksums | Set-Content -LiteralPath (Join-Path $distRoot 'SHA256SUMS.txt') -Encoding ASCII
+          if (@(Get-ChildItem -LiteralPath $distRoot -File).Count -ne 12) { throw 'Expected exactly twelve release assets.' }
+
+      - name: Upload assets and publish the beta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .\.github\scripts\publish-release.ps1
